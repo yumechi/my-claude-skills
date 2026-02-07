@@ -17,6 +17,8 @@ my-claude-skills/
 ├── skills/                            # グローバル配置用スキル（コピー元）
 │   ├── check-public-repository/       #   リポジトリ公開前の機密情報チェック
 │   │   └── SKILL.md
+│   ├── clean-branch/                  #   マージ済みブランチの整理
+│   │   └── SKILL.md
 │   └── quickcommit/                   #   安全な git add & commit
 │       └── SKILL.md
 ├── commands/                          # グローバル配置用コマンド（コピー元、将来用）
