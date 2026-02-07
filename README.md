@@ -12,10 +12,14 @@
 
 | スキル名 | 説明 |
 |---|---|
+| `add-gitignore` | プロジェクトの技術スタックを検出し、`.gitignore` を生成・更新します |
 | `check-public-repository` | リポジトリを公開する前に、機密情報や不適切なデータが含まれていないかチェックします |
 | `clean-branch` | main ブランチに切り替え、マージ済みのローカルブランチを削除します |
 | `create-pr` | 現在のブランチをリモートに push し、GitHub PR を作成します |
+| `dependency-audit` | 依存パッケージの脆弱性をチェックします |
 | `quickcommit` | git status を確認し、コミットすべきでないファイルが含まれていないかチェックしてから add & commit を実行します |
+| `todo-scan` | コードベース内の TODO/FIXME コメントをスキャンして一覧表示します |
+| `update-docs` | CLAUDE.md と README.md をプロジェクトの現状に合わせて更新します |
 
 ## セットアップ
 
