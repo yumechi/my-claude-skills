@@ -1,0 +1,7 @@
+---
+description: プロジェクト全体のルール
+globs:
+alwaysApply: true
+---
+
+このプロジェクトの指示については [CLAUDE.md](../../CLAUDE.md) を参照してください。
