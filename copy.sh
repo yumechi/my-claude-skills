@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 TARGET_BASE="${HOME}/.claude"
 
-deploy_dir() {
+copy_dir() {
     local source_dir="$1"
     local target_dir="$2"
     local label="$3"
@@ -22,7 +22,7 @@ deploy_dir() {
     fi
 
     mkdir -p "${target_dir}"
-    echo "${label}を ${target_dir} にデプロイします..."
+    echo "${label}を ${target_dir} にコピーします..."
 
     for item_dir in "${source_dir}"/*/; do
         [ -d "${item_dir}" ] || continue
@@ -34,11 +34,11 @@ deploy_dir() {
     done
 }
 
-echo "=== Claude Code グローバルデプロイ ==="
+echo "=== Claude Code グローバルコピー ==="
 echo ""
 
-deploy_dir "${SCRIPT_DIR}/skills" "${TARGET_BASE}/skills" "Skills"
-deploy_dir "${SCRIPT_DIR}/commands" "${TARGET_BASE}/commands" "Commands"
+copy_dir "${SCRIPT_DIR}/skills" "${TARGET_BASE}/skills" "Skills"
+copy_dir "${SCRIPT_DIR}/commands" "${TARGET_BASE}/commands" "Commands"
 
 echo ""
-echo "デプロイ完了"
+echo "コピー完了"

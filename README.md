@@ -2,7 +2,7 @@
 
 > Note: これは個人用のスキル管理リポジトリです。
 
-個人的によく使う Claude Code のスキル・コマンドをまとめて管理するリポジトリです。`deploy.sh` / `deploy.ps1` でグローバル領域（`~/.claude/`）にデプロイすることで、プロジェクトごとに毎回セットアップする手間を省きます。
+個人的によく使う Claude Code のスキル・コマンドをまとめて管理するリポジトリです。`copy.sh` / `copy.ps1` でグローバル領域（`~/.claude/`）にコピーすることで、プロジェクトごとに毎回セットアップする手間を省きます。
 
 ## 開発環境
 
@@ -21,24 +21,24 @@
 git clone <repository-url> ~/work/settings/my-claude-skills
 ```
 
-## デプロイ
+## グローバルへのコピー
 
 `skills/` および `commands/` の内容を `~/.claude/` 配下にコピーします。
 
 ```bash
 # bash (Linux / macOS)
-./deploy.sh
+./copy.sh
 
 # PowerShell (Windows)
-.\deploy.ps1
+.\copy.ps1
 ```
 
 ## ディレクトリ構成
 
 | ディレクトリ | 用途 |
 |---|---|
-| `skills/` | グローバルにデプロイするスキル（コピー元） |
-| `commands/` | グローバルにデプロイするコマンド（コピー元、将来用） |
+| `skills/` | グローバルにコピーするスキル（コピー元） |
+| `commands/` | グローバルにコピーするコマンド（コピー元、将来用） |
 | `.claude/` | このリポジトリ自体の Claude Code 設定 |
 | `.cursor/` | このリポジトリ自体の Cursor 設定 |
 

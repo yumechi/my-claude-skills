@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TargetBase = Join-Path $env:USERPROFILE ".claude"
 
-function Deploy-Dir {
+function Copy-Dir {
     param(
         [string]$SourceDir,
         [string]$TargetDir,
@@ -25,7 +25,7 @@ function Deploy-Dir {
         New-Item -ItemType Directory -Path $TargetDir -Force | Out-Null
     }
 
-    Write-Host "${Label}を ${TargetDir} にデプロイします..."
+    Write-Host "${Label}を ${TargetDir} にコピーします..."
 
     foreach ($item in $items) {
         $itemName = $item.Name
@@ -41,11 +41,11 @@ function Deploy-Dir {
     }
 }
 
-Write-Host "=== Claude Code グローバルデプロイ ==="
+Write-Host "=== Claude Code グローバルコピー ==="
 Write-Host ""
 
-Deploy-Dir -SourceDir (Join-Path $ScriptDir "skills") -TargetDir (Join-Path $TargetBase "skills") -Label "Skills"
-Deploy-Dir -SourceDir (Join-Path $ScriptDir "commands") -TargetDir (Join-Path $TargetBase "commands") -Label "Commands"
+Copy-Dir -SourceDir (Join-Path $ScriptDir "skills") -TargetDir (Join-Path $TargetBase "skills") -Label "Skills"
+Copy-Dir -SourceDir (Join-Path $ScriptDir "commands") -TargetDir (Join-Path $TargetBase "commands") -Label "Commands"
 
 Write-Host ""
-Write-Host "デプロイ完了"
+Write-Host "コピー完了"

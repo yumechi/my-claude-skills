@@ -14,15 +14,15 @@
 
 ```
 my-claude-skills/
-├── skills/                            # グローバル配置用スキル（デプロイ元）
+├── skills/                            # グローバル配置用スキル（コピー元）
 │   ├── check-public-repository/       #   リポジトリ公開前の機密情報チェック
 │   │   └── SKILL.md
 │   └── quickcommit/                   #   安全な git add & commit
 │       └── SKILL.md
-├── commands/                          # グローバル配置用コマンド（デプロイ元、将来用）
+├── commands/                          # グローバル配置用コマンド（コピー元、将来用）
 │   └── .keep
-├── deploy.sh                          # デプロイスクリプト (bash)
-├── deploy.ps1                         # デプロイスクリプト (PowerShell)
+├── copy.sh                            # コピースクリプト (bash)
+├── copy.ps1                           # コピースクリプト (PowerShell)
 ├── .claude/                           # このリポジトリ自体の Claude Code 設定
 ├── .cursor/                           # このリポジトリ自体の Cursor 設定
 ├── AGENTS.md
@@ -33,14 +33,14 @@ my-claude-skills/
 └── .gitignore
 ```
 
-## デプロイ
+## グローバルへのコピー
 
 `skills/` および `commands/` の内容を `~/.claude/` 配下にコピーします。
 
 ```bash
 # bash
-./deploy.sh
+./copy.sh
 
 # PowerShell
-.\deploy.ps1
+.\copy.ps1
 ```
