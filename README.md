@@ -1,24 +1,47 @@
-# my-template-repository
+# my-claude-skills
 
-> Note: これは個人の実験・学習用リポジトリです。コードの品質や動作は保証しません。
+> Note: これは個人用のスキル管理リポジトリです。
 
-playground 用のテンプレートリポジトリです。
+個人的によく使う Claude Code のスキル・コマンドをまとめて管理するリポジトリです。`deploy.sh` / `deploy.ps1` でグローバル領域（`~/.claude/`）にデプロイすることで、プロジェクトごとに毎回セットアップする手間を省きます。
 
 ## 開発環境
 
 2026/01/27 現在、個人で Cursor と Claude Code を使って開発しています。
 
-すべてのアプリケーションは仮想化されたコンテナ上で動作させています。
-コンテナランタイムとして Docker または podman に対応しています。
+## 収録スキル
 
-## プロジェクトの目的
+| スキル名 | 説明 |
+|---|---|
+| `check-public-repository` | リポジトリを公開する前に、機密情報や不適切なデータが含まれていないかチェックします |
+| `quickcommit` | git status を確認し、コミットすべきでないファイルが含まれていないかチェックしてから add & commit を実行します |
 
-簡潔にプロジェクトの目的を書きます
+## セットアップ
 
-## 環境構築/操作用のコマンド
+```bash
+git clone <repository-url> ~/work/settings/my-claude-skills
+```
 
-動作に必要なビルド方法、実行方法を記載します
+## デプロイ
 
-## 参照しているツール/フレームワークのライセンス
+`skills/` および `commands/` の内容を `~/.claude/` 配下にコピーします。
+
+```bash
+# bash (Linux / macOS)
+./deploy.sh
+
+# PowerShell (Windows)
+.\deploy.ps1
+```
+
+## ディレクトリ構成
+
+| ディレクトリ | 用途 |
+|---|---|
+| `skills/` | グローバルにデプロイするスキル（コピー元） |
+| `commands/` | グローバルにデプロイするコマンド（コピー元、将来用） |
+| `.claude/` | このリポジトリ自体の Claude Code 設定 |
+| `.cursor/` | このリポジトリ自体の Cursor 設定 |
 
 ## ライセンス
+
+[LICENSE](./LICENSE) を参照してください。
