@@ -14,6 +14,7 @@
 |---|---|
 | `check-public-repository` | リポジトリを公開する前に、機密情報や不適切なデータが含まれていないかチェックします |
 | `clean-branch` | main ブランチに切り替え、マージ済みのローカルブランチを削除します |
+| `create-pr` | 現在のブランチをリモートに push し、GitHub PR を作成します |
 | `quickcommit` | git status を確認し、コミットすべきでないファイルが含まれていないかチェックしてから add & commit を実行します |
 
 ## セットアップ
