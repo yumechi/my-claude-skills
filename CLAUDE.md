@@ -15,13 +15,21 @@
 ```
 my-claude-skills/
 ├── skills/                            # グローバル配置用スキル（コピー元）
+│   ├── add-gitignore/                 #   .gitignore 生成・更新
+│   │   └── SKILL.md
 │   ├── check-public-repository/       #   リポジトリ公開前の機密情報チェック
 │   │   └── SKILL.md
 │   ├── clean-branch/                  #   マージ済みブランチの整理
 │   │   └── SKILL.md
 │   ├── create-pr/                     #   リモート push & PR 作成
 │   │   └── SKILL.md
-│   └── quickcommit/                   #   安全な git add & commit
+│   ├── dependency-audit/              #   依存パッケージ脆弱性チェック
+│   │   └── SKILL.md
+│   ├── quickcommit/                   #   安全な git add & commit
+│   │   └── SKILL.md
+│   ├── todo-scan/                     #   TODO/FIXME スキャン
+│   │   └── SKILL.md
+│   └── update-docs/                   #   CLAUDE.md / README.md 更新
 │       └── SKILL.md
 ├── commands/                          # グローバル配置用コマンド（コピー元、将来用）
 │   └── .keep
