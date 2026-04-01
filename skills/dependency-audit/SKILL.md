@@ -1,6 +1,6 @@
 ---
 name: dependency-audit
-description: 依存パッケージの脆弱性をチェックします
+description: 依存パッケージの脆弱性とサプライチェーンセキュリティをチェックします
 ---
 
 # Dependency Audit
@@ -35,62 +35,38 @@ ls package-lock.json yarn.lock pnpm-lock.yaml package.json requirements.txt Pipf
 
 検出されたパッケージマネージャごとに、以下のコマンドを実行します。
 
-#### Node.js
+| パッケージマネージャ | コマンド |
+|---|---|
+| npm | `npm audit` |
+| yarn (v1) | `yarn audit` |
+| pnpm | `pnpm audit` |
+| Python (pip-audit) | `pip-audit` |
+| Ruby (bundler) | `bundle audit check --update` |
+| Go | `govulncheck ./...` |
+| Rust | `cargo audit` |
+| PHP (composer) | `composer audit` |
+| Java/Kotlin (Maven) | `mvn dependency-check:check` |
+
+### 3. サプライチェーンセキュリティの強化状況チェック
+
+脆弱性チェックに加え、サプライチェーン攻撃を防ぐための設定が適切に行われているか確認します。
+このスキルのディレクトリにあるスクリプトを実行してください。
 
 ```bash
-# npm
-npm audit
-
-# yarn (v1)
-yarn audit
-
-# pnpm
-pnpm audit
+bash <SKILL_DIR>/scripts/check-supply-chain.sh
 ```
 
-#### Python
+`<SKILL_DIR>` はこの SKILL.md が配置されているディレクトリのパスに置き換えること。
 
-```bash
-# pip-audit（推奨）
-pip-audit
+チェック内容:
+- **npm ignore-scripts**: `.npmrc` に `ignore-scripts=true` が設定されているか
+- **CI ロックファイル固定**: `--frozen-lockfile` / `--frozen` / `npm ci` が使用されているか
+- **minimumReleaseAge**: pnpm-workspace.yaml, renovate.json, pyproject.toml で新規リリースの即時採用を回避しているか
+- **GitHub Actions SHA ピンニング**: Actions がコミット SHA で固定されているか（`pinact` が利用可能なら自動修正を実行）
 
-# safety
-safety check
-```
+### 4. 結果のサマリ表示
 
-#### Ruby
-
-```bash
-bundle audit check --update
-```
-
-#### Go
-
-```bash
-govulncheck ./...
-```
-
-#### Rust
-
-```bash
-cargo audit
-```
-
-#### PHP
-
-```bash
-composer audit
-```
-
-#### Java/Kotlin (Maven)
-
-```bash
-mvn dependency-check:check
-```
-
-### 3. 結果のサマリ表示
-
-各 audit コマンドの結果を以下の形式で整理して表示します。
+各チェックの結果を以下の形式で整理して表示します。
 
 ```
 ## 脆弱性サマリ
@@ -100,9 +76,19 @@ mvn dependency-check:check
 | Node.js | 0 | 2 | 5 | 3 | 10 |
 | Python | 0 | 0 | 1 | 0 | 1 |
 | 合計 | 0 | 2 | 6 | 3 | 11 |
+
+## サプライチェーンセキュリティ
+
+| チェック項目 | 状態 |
+|---|---|
+| ignore-scripts | OK / WARNING |
+| CI ロックファイル固定 | OK / WARNING |
+| minimumReleaseAge | OK / WARNING / N/A |
+| Actions SHA ピンニング | OK / WARNING |
 ```
 
 - Critical / High の脆弱性がある場合は、該当パッケージ名とバージョン、推奨される修正アクションを表示する
+- サプライチェーンセキュリティの WARNING 項目がある場合は、具体的な修正手順を表示する
 - audit ツールがインストールされていない場合は、インストール方法を案内する
 
 ## 注意事項
@@ -111,3 +97,5 @@ mvn dependency-check:check
 - audit ツールの出力フォーマットはバージョンによって異なる場合がある
 - `npm audit` は `--audit-level` オプションで重要度のフィルタが可能
 - ネットワーク接続が必要（脆弱性データベースへの問い合わせ）
+- `ignore-scripts=true` を設定した場合、`postinstall` スクリプトに依存するパッケージは別途手動でセットアップが必要な場合がある
+- `pinact` による SHA ピンニング後は、Dependabot や Renovate で Actions の自動更新を設定することを推奨する
