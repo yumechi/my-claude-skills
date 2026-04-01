@@ -1,0 +1,145 @@
+#!/bin/bash
+# check-supply-chain.sh - サプライチェーンセキュリティの設定を確認する
+set -euo pipefail
+
+echo "=== サプライチェーンセキュリティチェック ==="
+echo ""
+
+FOUND_ISSUES=0
+
+# --- 1. npm ignore-scripts ---
+echo "--- npm ignore-scripts ---"
+if [ -f package.json ]; then
+  if [ -f .npmrc ] && grep -q 'ignore-scripts=true' .npmrc; then
+    echo "OK: .npmrc に ignore-scripts=true が設定済み"
+  else
+    echo "WARNING: .npmrc に ignore-scripts=true を設定してください"
+    FOUND_ISSUES=1
+  fi
+else
+  echo "SKIP: Node.js プロジェクトではありません"
+fi
+echo ""
+
+# --- 2. CI ロックファイル固定 ---
+echo "--- CI ロックファイル固定 ---"
+if ls .github/workflows/*.yml .github/workflows/*.yaml 2>/dev/null | head -1 > /dev/null; then
+  CI_ISSUES=0
+
+  # pnpm
+  PNPM_UNFROZEN=$(grep -rn 'pnpm install' .github/workflows/ | grep -v '\-\-frozen-lockfile' || true)
+  if [ -n "$PNPM_UNFROZEN" ]; then
+    echo "WARNING: pnpm install に --frozen-lockfile を追加してください"
+    echo "$PNPM_UNFROZEN" | sed 's/^/  /'
+    CI_ISSUES=1
+  fi
+
+  # npm install (should use npm ci)
+  NPM_INSTALL=$(grep -rn 'npm install' .github/workflows/ || true)
+  if [ -n "$NPM_INSTALL" ]; then
+    echo "WARNING: npm install の代わりに npm ci を使用してください"
+    echo "$NPM_INSTALL" | sed 's/^/  /'
+    CI_ISSUES=1
+  fi
+
+  # yarn
+  YARN_UNFROZEN=$(grep -rn 'yarn install' .github/workflows/ | grep -v '\-\-frozen-lockfile\|--immutable' || true)
+  if [ -n "$YARN_UNFROZEN" ]; then
+    echo "WARNING: yarn install に --frozen-lockfile（v1）または --immutable（v2+）を追加してください"
+    echo "$YARN_UNFROZEN" | sed 's/^/  /'
+    CI_ISSUES=1
+  fi
+
+  # uv
+  UV_UNFROZEN=$(grep -rn 'uv sync' .github/workflows/ | grep -v '\-\-frozen' || true)
+  if [ -n "$UV_UNFROZEN" ]; then
+    echo "WARNING: uv sync に --frozen を追加してください"
+    echo "$UV_UNFROZEN" | sed 's/^/  /'
+    CI_ISSUES=1
+  fi
+
+  if [ "$CI_ISSUES" -eq 0 ]; then
+    echo "OK: CI ロックファイル固定に問題なし"
+  else
+    FOUND_ISSUES=1
+  fi
+else
+  echo "SKIP: GitHub Actions ワークフローが見つかりません"
+fi
+echo ""
+
+# --- 3. minimumReleaseAge ---
+echo "--- 新規リリースの即時採用回避 ---"
+RELEASE_AGE_CHECKED=0
+
+if [ -f pnpm-workspace.yaml ]; then
+  RELEASE_AGE_CHECKED=1
+  if grep -q 'minimumReleaseAge' pnpm-workspace.yaml; then
+    echo "OK: pnpm-workspace.yaml に minimumReleaseAge が設定済み"
+  else
+    echo "WARNING: pnpm-workspace.yaml に minimumReleaseAge を追加してください"
+    FOUND_ISSUES=1
+  fi
+fi
+
+if [ -f renovate.json ]; then
+  RELEASE_AGE_CHECKED=1
+  if grep -q 'minimumReleaseAge' renovate.json; then
+    echo "OK: renovate.json に minimumReleaseAge が設定済み"
+  else
+    echo "WARNING: renovate.json に minimumReleaseAge を追加してください"
+    FOUND_ISSUES=1
+  fi
+fi
+
+if [ -f pyproject.toml ]; then
+  RELEASE_AGE_CHECKED=1
+  if grep -q 'exclude-newer' pyproject.toml; then
+    echo "OK: pyproject.toml に exclude-newer が設定済み"
+  else
+    echo "INFO: uv を使用している場合、[tool.uv] に exclude-newer を設定してください"
+  fi
+fi
+
+if [ "$RELEASE_AGE_CHECKED" -eq 0 ]; then
+  echo "SKIP: 対象の設定ファイルが見つかりません"
+fi
+echo ""
+
+# --- 4. GitHub Actions SHA ピンニング ---
+echo "--- GitHub Actions SHA ピンニング ---"
+if ls .github/workflows/*.yml .github/workflows/*.yaml 2>/dev/null | head -1 > /dev/null; then
+  UNPINNED=$(grep -rn 'uses:' .github/workflows/ | grep -v '@[0-9a-f]\{40\}' | grep -v '^\s*#' | grep -v 'uses: \./' || true)
+  if [ -n "$UNPINNED" ]; then
+    echo "WARNING: 以下の Action が SHA で固定されていません:"
+    echo "$UNPINNED" | sed 's/^/  /'
+    FOUND_ISSUES=1
+
+    # pinact による自動修正
+    if command -v pinact > /dev/null 2>&1; then
+      echo ""
+      echo "pinact が利用可能です。自動修正を実行します..."
+      pinact run
+      echo "pinact による修正が完了しました。差分を確認してください。"
+    else
+      echo ""
+      echo "INFO: pinact をインストールすると SHA ピンニングを自動化できます"
+      echo "  go install github.com/suzuki-shunsuke/pinact/cmd/pinact@latest"
+      echo "  aqua g -i suzuki-shunsuke/pinact"
+    fi
+  else
+    echo "OK: すべての Action が SHA で固定されています"
+  fi
+else
+  echo "SKIP: GitHub Actions ワークフローが見つかりません"
+fi
+echo ""
+
+# --- サマリ ---
+if [ "$FOUND_ISSUES" -eq 1 ]; then
+  echo "=== WARNING が検出されました。対応を検討してください ==="
+else
+  echo "=== サプライチェーンセキュリティチェック合格 ==="
+fi
+
+exit $FOUND_ISSUES
