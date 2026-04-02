@@ -52,8 +52,18 @@ ls package-lock.json yarn.lock pnpm-lock.yaml package.json requirements.txt Pipf
 脆弱性チェックに加え、サプライチェーン攻撃を防ぐための設定が適切に行われているか確認します。
 このスキルのディレクトリにあるスクリプトを実行してください。
 
+OS を判定し、適切なスクリプトを実行してください。
+
+**Linux / macOS の場合:**
+
 ```bash
 bash <SKILL_DIR>/scripts/check-supply-chain.sh
+```
+
+**Windows の場合:**
+
+```powershell
+powershell -ExecutionPolicy Bypass -File <SKILL_DIR>/scripts/check-supply-chain.ps1
 ```
 
 `<SKILL_DIR>` はこの SKILL.md が配置されているディレクトリのパスに置き換えること。
