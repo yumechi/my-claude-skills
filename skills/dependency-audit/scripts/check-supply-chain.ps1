@@ -39,7 +39,7 @@ if ($workflowFiles.Count -gt 0) {
     }
 
     # npm install (should use npm ci)
-    $npmInstall = Select-String -Path $workflowFiles.FullName -Pattern 'npm install' -ErrorAction SilentlyContinue
+    $npmInstall = Select-String -Path $workflowFiles.FullName -Pattern '(?<!p)npm install' -ErrorAction SilentlyContinue
     if ($npmInstall) {
         Write-Host "WARNING: npm install の代わりに npm ci を使用してください"
         $npmInstall | ForEach-Object { Write-Host "  $($_.Filename):$($_.LineNumber): $($_.Line.Trim())" }
