@@ -83,7 +83,7 @@ if ((Test-Path "pnpm-lock.yaml") -or (Test-Path "pnpm-workspace.yaml")) {
     } elseif ((Test-Path "package.json") -and (Select-String -Path "package.json" -Pattern 'minimumReleaseAge' -Quiet)) {
         Write-Host "OK: package.json に minimumReleaseAge が設定済み"
     } else {
-        Write-Host "WARNING: pnpm-workspace.yaml に minimumReleaseAge を追加してください"
+        Write-Host "WARNING: pnpm-workspace.yaml に minimumReleaseAge を追加してください（推奨: 7 days）"
         $FoundIssues = 1
     }
 }
@@ -93,7 +93,7 @@ if (Test-Path "renovate.json") {
     if (Select-String -Path "renovate.json" -Pattern 'minimumReleaseAge' -Quiet) {
         Write-Host "OK: renovate.json に minimumReleaseAge が設定済み"
     } else {
-        Write-Host "WARNING: renovate.json に minimumReleaseAge を追加してください"
+        Write-Host "WARNING: renovate.json に minimumReleaseAge を追加してください（推奨: 7 days）"
         $FoundIssues = 1
     }
 }
