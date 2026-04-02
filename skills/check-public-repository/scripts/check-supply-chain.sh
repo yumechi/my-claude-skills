@@ -23,7 +23,7 @@ echo ""
 
 # --- 2. CI ロックファイル固定 ---
 echo "--- CI ロックファイル固定 ---"
-if ls .github/workflows/*.yml .github/workflows/*.yaml 2>/dev/null | head -1 > /dev/null; then
+if compgen -G '.github/workflows/*.yml' > /dev/null 2>&1 || compgen -G '.github/workflows/*.yaml' > /dev/null 2>&1; then
   CI_ISSUES=0
 
   # pnpm
@@ -72,10 +72,12 @@ echo ""
 echo "--- 新規リリースの即時採用回避 ---"
 RELEASE_AGE_CHECKED=0
 
-if [ -f pnpm-workspace.yaml ]; then
+if [ -f pnpm-lock.yaml ] || [ -f pnpm-workspace.yaml ]; then
   RELEASE_AGE_CHECKED=1
-  if grep -q 'minimumReleaseAge' pnpm-workspace.yaml; then
+  if [ -f pnpm-workspace.yaml ] && grep -q 'minimumReleaseAge' pnpm-workspace.yaml; then
     echo "OK: pnpm-workspace.yaml に minimumReleaseAge が設定済み"
+  elif [ -f package.json ] && grep -q 'minimumReleaseAge' package.json; then
+    echo "OK: package.json に minimumReleaseAge が設定済み"
   else
     echo "WARNING: pnpm-workspace.yaml に minimumReleaseAge を追加してください"
     FOUND_ISSUES=1
@@ -108,7 +110,7 @@ echo ""
 
 # --- 4. GitHub Actions SHA ピンニング ---
 echo "--- GitHub Actions SHA ピンニング ---"
-if ls .github/workflows/*.yml .github/workflows/*.yaml 2>/dev/null | head -1 > /dev/null; then
+if compgen -G '.github/workflows/*.yml' > /dev/null 2>&1 || compgen -G '.github/workflows/*.yaml' > /dev/null 2>&1; then
   UNPINNED=$(grep -rn 'uses:' .github/workflows/ | grep -v '@[0-9a-f]\{40\}' | grep -v '^\s*#' | grep -v 'uses: \./' || true)
   if [ -n "$UNPINNED" ]; then
     echo "WARNING: 以下の Action が SHA で固定されていません:"

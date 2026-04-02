@@ -76,10 +76,12 @@ Write-Host ""
 Write-Host "--- 新規リリースの即時採用回避 ---"
 $ReleaseAgeChecked = 0
 
-if (Test-Path "pnpm-workspace.yaml") {
+if ((Test-Path "pnpm-lock.yaml") -or (Test-Path "pnpm-workspace.yaml")) {
     $ReleaseAgeChecked = 1
-    if (Select-String -Path "pnpm-workspace.yaml" -Pattern 'minimumReleaseAge' -Quiet) {
+    if ((Test-Path "pnpm-workspace.yaml") -and (Select-String -Path "pnpm-workspace.yaml" -Pattern 'minimumReleaseAge' -Quiet)) {
         Write-Host "OK: pnpm-workspace.yaml に minimumReleaseAge が設定済み"
+    } elseif ((Test-Path "package.json") -and (Select-String -Path "package.json" -Pattern 'minimumReleaseAge' -Quiet)) {
+        Write-Host "OK: package.json に minimumReleaseAge が設定済み"
     } else {
         Write-Host "WARNING: pnpm-workspace.yaml に minimumReleaseAge を追加してください"
         $FoundIssues = 1
