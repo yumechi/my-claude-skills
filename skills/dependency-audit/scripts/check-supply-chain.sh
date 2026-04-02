@@ -35,7 +35,7 @@ if compgen -G '.github/workflows/*.yml' > /dev/null 2>&1 || compgen -G '.github/
   fi
 
   # npm install (should use npm ci)
-  NPM_INSTALL=$(grep -rn 'npm install' .github/workflows/ || true)
+  NPM_INSTALL=$(grep -rn '[^p]npm install\|^npm install' .github/workflows/ || true)
   if [ -n "$NPM_INSTALL" ]; then
     echo "WARNING: npm install の代わりに npm ci を使用してください"
     echo "$NPM_INSTALL" | sed 's/^/  /'
