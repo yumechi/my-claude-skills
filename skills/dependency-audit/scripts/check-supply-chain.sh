@@ -79,7 +79,8 @@ if [ -f pnpm-lock.yaml ] || [ -f pnpm-workspace.yaml ]; then
   elif [ -f package.json ] && grep -q 'minimumReleaseAge' package.json; then
     echo "OK: package.json に minimumReleaseAge が設定済み"
   else
-    echo "WARNING: pnpm-workspace.yaml に minimumReleaseAge を追加してください（推奨: 7 days）"
+    echo "WARNING: pnpm-workspace.yaml に minimumReleaseAge を追加してください（推奨: 10080（7日 = 7×24×60分））"
+    echo "  設定例: minimumReleaseAge: 10080"
     FOUND_ISSUES=1
   fi
 fi
@@ -89,7 +90,8 @@ if [ -f renovate.json ]; then
   if grep -q 'minimumReleaseAge' renovate.json; then
     echo "OK: renovate.json に minimumReleaseAge が設定済み"
   else
-    echo "WARNING: renovate.json に minimumReleaseAge を追加してください（推奨: 7 days）"
+    echo "WARNING: renovate.json に minimumReleaseAge を追加してください（推奨: \"7 days\"）"
+    echo "  設定例: \"minimumReleaseAge\": \"7 days\""
     FOUND_ISSUES=1
   fi
 fi
@@ -99,7 +101,9 @@ if [ -f pyproject.toml ]; then
   if grep -q 'exclude-newer' pyproject.toml; then
     echo "OK: pyproject.toml に exclude-newer が設定済み"
   else
-    echo "INFO: uv を使用している場合、[tool.uv] に exclude-newer を設定してください"
+    echo "INFO: uv を使用している場合、[tool.uv] に exclude-newer を設定してください（推奨: \"3 days\"）"
+    echo "  設定例: [tool.uv]"
+    echo "          exclude-newer = \"3 days\""
   fi
 fi
 

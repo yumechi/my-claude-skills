@@ -83,7 +83,8 @@ if ((Test-Path "pnpm-lock.yaml") -or (Test-Path "pnpm-workspace.yaml")) {
     } elseif ((Test-Path "package.json") -and (Select-String -Path "package.json" -Pattern 'minimumReleaseAge' -Quiet)) {
         Write-Host "OK: package.json に minimumReleaseAge が設定済み"
     } else {
-        Write-Host "WARNING: pnpm-workspace.yaml に minimumReleaseAge を追加してください（推奨: 7 days）"
+        Write-Host "WARNING: pnpm-workspace.yaml に minimumReleaseAge を追加してください（推奨: 10080（7日 = 7×24×60分））"
+        Write-Host "  設定例: minimumReleaseAge: 10080"
         $FoundIssues = 1
     }
 }
@@ -93,7 +94,8 @@ if (Test-Path "renovate.json") {
     if (Select-String -Path "renovate.json" -Pattern 'minimumReleaseAge' -Quiet) {
         Write-Host "OK: renovate.json に minimumReleaseAge が設定済み"
     } else {
-        Write-Host "WARNING: renovate.json に minimumReleaseAge を追加してください（推奨: 7 days）"
+        Write-Host "WARNING: renovate.json に minimumReleaseAge を追加してください（推奨: `"7 days`"）"
+        Write-Host "  設定例: `"minimumReleaseAge`": `"7 days`""
         $FoundIssues = 1
     }
 }
@@ -103,7 +105,9 @@ if (Test-Path "pyproject.toml") {
     if (Select-String -Path "pyproject.toml" -Pattern 'exclude-newer' -Quiet) {
         Write-Host "OK: pyproject.toml に exclude-newer が設定済み"
     } else {
-        Write-Host "INFO: uv を使用している場合、[tool.uv] に exclude-newer を設定してください"
+        Write-Host "INFO: uv を使用している場合、[tool.uv] に exclude-newer を設定してください（推奨: `"3 days`"）"
+        Write-Host "  設定例: [tool.uv]"
+        Write-Host "          exclude-newer = `"3 days`""
     }
 }
 
