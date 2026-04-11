@@ -116,7 +116,27 @@ if ($ReleaseAgeChecked -eq 0) {
 }
 Write-Host ""
 
-# --- 4. GitHub Actions SHA ピンニング ---
+# --- 4. pnpm trustPolicy ---
+Write-Host "--- pnpm trustPolicy ---"
+if ((Test-Path "pnpm-lock.yaml") -or (Test-Path "pnpm-workspace.yaml")) {
+    if ((Test-Path "pnpm-workspace.yaml") -and (Select-String -Path "pnpm-workspace.yaml" -Pattern 'trustPolicy' -Quiet)) {
+        Write-Host "OK: pnpm-workspace.yaml に trustPolicy が設定済み"
+    } else {
+        Write-Host "WARNING: pnpm-workspace.yaml に trustPolicy: no-downgrade を追加してください"
+        Write-Host "  パッケージの信頼レベルのダウングレード（例: Trusted Publisher → 署名なし）を検出し、"
+        Write-Host "  侵害された可能性のあるバージョンのインストールを防止します"
+        Write-Host "  設定例:"
+        Write-Host "    trustPolicy: no-downgrade"
+        Write-Host "    trustPolicyExclude:"
+        Write-Host "      - 'chokidar@4.0.3'"
+        $FoundIssues = 1
+    }
+} else {
+    Write-Host "SKIP: pnpm プロジェクトではありません"
+}
+Write-Host ""
+
+# --- 5. GitHub Actions SHA ピンニング ---
 Write-Host "--- GitHub Actions SHA ピンニング ---"
 if ($workflowFiles.Count -gt 0) {
     $unpinned = Select-String -Path $workflowFiles.FullName -Pattern 'uses:' -ErrorAction SilentlyContinue |
