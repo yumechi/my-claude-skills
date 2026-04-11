@@ -72,6 +72,7 @@ powershell -ExecutionPolicy Bypass -File <SKILL_DIR>/scripts/check-supply-chain.
 - **npm ignore-scripts**: `.npmrc` に `ignore-scripts=true` が設定されているか
 - **CI ロックファイル固定**: `--frozen-lockfile` / `--frozen` / `npm ci` が使用されているか
 - **minimumReleaseAge**: pnpm-workspace.yaml, renovate.json, pyproject.toml で新規リリースの即時採用を回避しているか
+- **pnpm trustPolicy**: pnpm-workspace.yaml に `trustPolicy: no-downgrade` が設定されているか（パッケージの信頼レベルダウングレードを検出）
 - **GitHub Actions SHA ピンニング**: Actions がコミット SHA で固定されているか（`pinact` が利用可能なら自動修正を実行）
 
 ### 4. 結果のサマリ表示
@@ -94,6 +95,7 @@ powershell -ExecutionPolicy Bypass -File <SKILL_DIR>/scripts/check-supply-chain.
 | ignore-scripts | OK / WARNING |
 | CI ロックファイル固定 | OK / WARNING |
 | minimumReleaseAge | OK / WARNING / N/A |
+| pnpm trustPolicy | OK / WARNING / N/A |
 | Actions SHA ピンニング | OK / WARNING |
 ```
 

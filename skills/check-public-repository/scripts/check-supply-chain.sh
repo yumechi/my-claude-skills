@@ -112,7 +112,27 @@ if [ "$RELEASE_AGE_CHECKED" -eq 0 ]; then
 fi
 echo ""
 
-# --- 4. GitHub Actions SHA ピンニング ---
+# --- 4. pnpm trustPolicy ---
+echo "--- pnpm trustPolicy ---"
+if [ -f pnpm-lock.yaml ] || [ -f pnpm-workspace.yaml ]; then
+  if [ -f pnpm-workspace.yaml ] && grep -q 'trustPolicy' pnpm-workspace.yaml; then
+    echo "OK: pnpm-workspace.yaml に trustPolicy が設定済み"
+  else
+    echo "WARNING: pnpm-workspace.yaml に trustPolicy: no-downgrade を追加してください"
+    echo "  パッケージの信頼レベルのダウングレード（例: Trusted Publisher → 署名なし）を検出し、"
+    echo "  侵害された可能性のあるバージョンのインストールを防止します"
+    echo "  設定例:"
+    echo "    trustPolicy: no-downgrade"
+    echo "    trustPolicyExclude:"
+    echo "      - 'chokidar@4.0.3'"
+    FOUND_ISSUES=1
+  fi
+else
+  echo "SKIP: pnpm プロジェクトではありません"
+fi
+echo ""
+
+# --- 5. GitHub Actions SHA ピンニング ---
 echo "--- GitHub Actions SHA ピンニング ---"
 if compgen -G '.github/workflows/*.yml' > /dev/null 2>&1 || compgen -G '.github/workflows/*.yaml' > /dev/null 2>&1; then
   UNPINNED=$(grep -rn 'uses:' .github/workflows/ | grep -v '@[0-9a-f]\{40\}' | grep -v '^\s*#' | grep -v 'uses: \./' || true)
