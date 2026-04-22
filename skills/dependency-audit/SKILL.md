@@ -54,13 +54,13 @@ ls package-lock.json yarn.lock pnpm-lock.yaml package.json requirements.txt Pipf
 
 OS を判定し、適切なスクリプトを実行してください。
 
-**Linux / macOS の場合:**
+Linux / macOS の場合:
 
 ```bash
 bash <SKILL_DIR>/scripts/check-supply-chain.sh
 ```
 
-**Windows の場合:**
+Windows の場合:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File <SKILL_DIR>/scripts/check-supply-chain.ps1
@@ -69,11 +69,11 @@ powershell -ExecutionPolicy Bypass -File <SKILL_DIR>/scripts/check-supply-chain.
 `<SKILL_DIR>` はこの SKILL.md が配置されているディレクトリのパスに置き換えること。
 
 チェック内容:
-- **npm ignore-scripts**: `.npmrc` に `ignore-scripts=true` が設定されているか
-- **CI ロックファイル固定**: `--frozen-lockfile` / `--frozen` / `npm ci` が使用されているか
-- **minimumReleaseAge / cooldown**: pnpm-workspace.yaml, renovate.json, .github/dependabot.yml, pyproject.toml で新規リリースの即時採用を回避しているか（Dependabot は `cooldown.default-days`、Renovate は `minimumReleaseAge`）
-- **pnpm trustPolicy**: pnpm-workspace.yaml に `trustPolicy: no-downgrade` が設定されているか（パッケージの信頼レベルダウングレードを検出）
-- **GitHub Actions SHA ピンニング**: Actions がコミット SHA で固定されているか（`pinact` が利用可能なら自動修正を実行）
+- npm ignore-scripts: `.npmrc` に `ignore-scripts=true` が設定されているか
+- CI ロックファイル固定: `--frozen-lockfile` / `--frozen` / `npm ci` が使用されているか
+- minimumReleaseAge / cooldown: pnpm-workspace.yaml, renovate.json, .github/dependabot.yml, pyproject.toml で新規リリースの即時採用を回避しているか（Dependabot は `cooldown.default-days`、Renovate は `minimumReleaseAge`）
+- pnpm trustPolicy: pnpm-workspace.yaml に `trustPolicy: no-downgrade` が設定されているか（パッケージの信頼レベルダウングレードを検出）
+- GitHub Actions SHA ピンニング: Actions がコミット SHA で固定されているか（`pinact` が利用可能なら自動修正を実行）
 
 ### 4. 結果のサマリ表示
 

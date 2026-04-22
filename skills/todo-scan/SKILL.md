@@ -65,7 +65,7 @@ grep -rn --include='*' -E '\b(TODO|FIXME|HACK|XXX|WARN|NOTE)\b' . \
 | XXX | 0 |
 | WARN | 0 |
 | NOTE | 5 |
-| **合計** | **21** |
+| 合計 | 21 |
 
 ### TODO (12件)
 
