@@ -75,6 +75,33 @@ powershell -ExecutionPolicy Bypass -File <SKILL_DIR>/scripts/check-supply-chain.
 - pnpm trustPolicy: pnpm-workspace.yaml に `trustPolicy: no-downgrade` が設定されているか（パッケージの信頼レベルダウングレードを検出）
 - GitHub Actions SHA ピンニング: Actions がコミット SHA で固定されているか（`pinact` が利用可能なら自動修正を実行）
 
+#### Dependabot と Renovate の共存検出時の対応
+
+スクリプトが `WARNING: dependabot.yml と renovate.json が両方存在します` を出力した場合、Claude は以下のフローで統一を促す。
+
+1. ユーザーに統一方向を確認する（デフォルトは Dependabot への統一）
+   - 推奨: Dependabot に統一（`renovate.json` を削除）
+   - 代替: Renovate に統一（`.github/dependabot.yml` を削除）
+
+2. Dependabot に統一する場合の設定変換
+
+   | Renovate (renovate.json) | Dependabot (.github/dependabot.yml) |
+   |---|---|
+   | `manager`（npm / pip / github-actions 等） | `package-ecosystem` |
+   | `schedule`（例: `["every weekend"]`） | `schedule.interval`（daily / weekly / monthly） |
+   | `minimumReleaseAge`（例: `"7 days"`） | `cooldown.default-days: 7` |
+   | `packageRules[].groupName` | `groups[].<groupName>` |
+
+   変換後、次のファイルを削除する:
+   - `renovate.json`
+   - `.github/renovate.json` / `.github/renovate.json5` / `renovate.json5` / `.renovaterc*`（存在する場合のみ）
+
+3. Renovate に統一する場合は上表の逆方向で変換し、`.github/dependabot.yml`（または `.yaml`）を削除する
+
+4. 変換できない項目は手動対応を促す
+   - Renovate 固有: `regexManagers`、細粒度 `packageRules`、`packageRules[].matchPackagePatterns` など
+   - Dependabot 固有: `insecure-external-code-execution`、`reviewers` / `assignees` など
+
 ### 4. 結果のサマリ表示
 
 各チェックの結果を以下の形式で整理して表示します。

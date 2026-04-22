@@ -130,6 +130,15 @@ if (Test-Path "pyproject.toml") {
     }
 }
 
+# Dependabot と Renovate の共存検出
+if ($dependabotFile -and (Test-Path "renovate.json")) {
+    Write-Host "WARNING: dependabot.yml と renovate.json が両方存在します"
+    Write-Host "  依存更新 PR の重複や設定の矛盾を避けるため、どちらかに統一してください"
+    Write-Host "  推奨: Dependabot に統一し renovate.json を削除"
+    Write-Host "  Claude に移行を依頼すると、設定変換と旧ファイル削除をサポートします"
+    $FoundIssues = 1
+}
+
 if ($ReleaseAgeChecked -eq 0) {
     Write-Host "SKIP: 対象の設定ファイルが見つかりません"
 }
