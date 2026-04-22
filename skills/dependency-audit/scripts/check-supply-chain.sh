@@ -122,6 +122,19 @@ if [ -f pyproject.toml ]; then
   fi
 fi
 
+# Dependabot と Renovate の共存検出
+DEPENDABOT_EXISTS=0
+if [ -f .github/dependabot.yml ] || [ -f .github/dependabot.yaml ]; then
+  DEPENDABOT_EXISTS=1
+fi
+if [ "$DEPENDABOT_EXISTS" -eq 1 ] && [ -f renovate.json ]; then
+  echo "WARNING: dependabot.yml と renovate.json が両方存在します"
+  echo "  依存更新 PR の重複や設定の矛盾を避けるため、どちらかに統一してください"
+  echo "  推奨: Dependabot に統一し renovate.json を削除"
+  echo "  Claude に移行を依頼すると、設定変換と旧ファイル削除をサポートします"
+  FOUND_ISSUES=1
+fi
+
 if [ "$RELEASE_AGE_CHECKED" -eq 0 ]; then
   echo "SKIP: 対象の設定ファイルが見つかりません"
 fi
