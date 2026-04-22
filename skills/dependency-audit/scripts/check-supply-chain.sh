@@ -96,6 +96,21 @@ if [ -f renovate.json ]; then
   fi
 fi
 
+if [ -f .github/dependabot.yml ] || [ -f .github/dependabot.yaml ]; then
+  RELEASE_AGE_CHECKED=1
+  DEPENDABOT_FILE=".github/dependabot.yml"
+  [ -f .github/dependabot.yaml ] && DEPENDABOT_FILE=".github/dependabot.yaml"
+  if grep -q 'cooldown:' "$DEPENDABOT_FILE"; then
+    echo "OK: $DEPENDABOT_FILE に cooldown が設定済み"
+  else
+    echo "WARNING: $DEPENDABOT_FILE に cooldown を追加してください（推奨: default-days: 7）"
+    echo "  設定例（各 updates エントリ内に記述）:"
+    echo "    cooldown:"
+    echo "      default-days: 7"
+    FOUND_ISSUES=1
+  fi
+fi
+
 if [ -f pyproject.toml ]; then
   RELEASE_AGE_CHECKED=1
   if grep -q 'exclude-newer' pyproject.toml; then
