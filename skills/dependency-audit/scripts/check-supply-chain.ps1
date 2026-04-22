@@ -100,6 +100,25 @@ if (Test-Path "renovate.json") {
     }
 }
 
+$dependabotFile = $null
+if (Test-Path ".github/dependabot.yml") {
+    $dependabotFile = ".github/dependabot.yml"
+} elseif (Test-Path ".github/dependabot.yaml") {
+    $dependabotFile = ".github/dependabot.yaml"
+}
+if ($dependabotFile) {
+    $ReleaseAgeChecked = 1
+    if (Select-String -Path $dependabotFile -Pattern 'cooldown:' -Quiet) {
+        Write-Host "OK: $dependabotFile に cooldown が設定済み"
+    } else {
+        Write-Host "WARNING: $dependabotFile に cooldown を追加してください（推奨: default-days: 7）"
+        Write-Host "  設定例（各 updates エントリ内に記述）:"
+        Write-Host "    cooldown:"
+        Write-Host "      default-days: 7"
+        $FoundIssues = 1
+    }
+}
+
 if (Test-Path "pyproject.toml") {
     $ReleaseAgeChecked = 1
     if (Select-String -Path "pyproject.toml" -Pattern 'exclude-newer' -Quiet) {

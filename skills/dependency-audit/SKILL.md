@@ -71,7 +71,7 @@ powershell -ExecutionPolicy Bypass -File <SKILL_DIR>/scripts/check-supply-chain.
 チェック内容:
 - **npm ignore-scripts**: `.npmrc` に `ignore-scripts=true` が設定されているか
 - **CI ロックファイル固定**: `--frozen-lockfile` / `--frozen` / `npm ci` が使用されているか
-- **minimumReleaseAge**: pnpm-workspace.yaml, renovate.json, pyproject.toml で新規リリースの即時採用を回避しているか
+- **minimumReleaseAge / cooldown**: pnpm-workspace.yaml, renovate.json, .github/dependabot.yml, pyproject.toml で新規リリースの即時採用を回避しているか（Dependabot は `cooldown.default-days`、Renovate は `minimumReleaseAge`）
 - **pnpm trustPolicy**: pnpm-workspace.yaml に `trustPolicy: no-downgrade` が設定されているか（パッケージの信頼レベルダウングレードを検出）
 - **GitHub Actions SHA ピンニング**: Actions がコミット SHA で固定されているか（`pinact` が利用可能なら自動修正を実行）
 
