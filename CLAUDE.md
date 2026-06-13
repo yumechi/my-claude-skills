@@ -21,6 +21,18 @@
 
 ディレクトリ構成の詳細は [docs/project-structure.md](docs/project-structure.md) を参照。
 
+## スキルのモデル割り当て
+
+コスト削減のため、各スキルは `context: fork` で独立サブエージェントとして実行し、処理の性質に応じた安いモデルを `model:` で指定しています。メインエージェントのモデル・コンテキストには影響しません。詳細な設計は [docs/skill-model-policy.md](./docs/skill-model-policy.md) を参照してください。
+
+| スキル | model |
+|---|---|
+| `clean-branch` / `todo-scan` / `create-pr` / `add-gitignore` / `quickcommit` | `haiku` |
+| `dependency-audit` / `check-public-repository` / `update-docs` | `opus[1m]` |
+
+- 今後追加するスキルのデフォルトは `sonnet[1m]`。タスクの性質に応じて調整する。
+- 書き込み前にユーザー確認が必要なスキル（add-gitignore / quickcommit / update-docs）は、fork されたサブエージェントが「提案」を返し、メインエージェントが承認後に適用する。
+
 ## グローバルへのコピー
 
 `skills/` および `commands/` の内容を `~/.claude/` 配下にコピーします。

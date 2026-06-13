@@ -27,7 +27,8 @@ my-claude-skills/
 ├── commands/                          # グローバル配置用コマンド（コピー元、将来用）
 │   └── .keep
 ├── docs/                              # ドキュメント
-│   └── project-structure.md           #   ディレクトリ構成の詳細
+│   ├── project-structure.md           #   ディレクトリ構成の詳細
+│   └── skill-model-policy.md          #   スキルのモデル割り当てポリシー
 ├── copy.sh                            # コピースクリプト (bash)
 ├── copy.ps1                           # コピースクリプト (PowerShell)
 ├── .claude/                           # このリポジトリ自体の Claude Code 設定

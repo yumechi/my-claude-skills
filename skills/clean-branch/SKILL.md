@@ -1,6 +1,9 @@
 ---
 name: clean-branch
 description: mainブランチに切り替え、マージ済みのローカルブランチを削除します
+context: fork
+agent: general-purpose
+model: haiku
 ---
 
 # Clean Branch

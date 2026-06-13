@@ -45,8 +45,13 @@ git clone <repository-url> ~/work/settings/my-claude-skills
 |---|---|
 | `skills/` | グローバルにコピーするスキル（コピー元） |
 | `commands/` | グローバルにコピーするコマンド（コピー元、将来用） |
+| `docs/` | 設計ドキュメント（配布対象外） |
 | `.claude/` | このリポジトリ自体の Claude Code 設定 |
 | `.cursor/` | このリポジトリ自体の Cursor 設定 |
+
+## スキルのモデル割り当て
+
+各スキルは `context: fork` で独立サブエージェントとして実行し、処理の性質に応じた安いモデル（`haiku` / `opus[1m]`）を `model:` で指定することでコストを抑えています。設計の詳細は [docs/skill-model-policy.md](./docs/skill-model-policy.md) を参照してください。
 
 ## ライセンス
 

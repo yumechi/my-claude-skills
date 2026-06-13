@@ -1,6 +1,9 @@
 ---
 name: dependency-audit
 description: 依存パッケージの脆弱性とサプライチェーンセキュリティをチェックします
+context: fork
+agent: general-purpose
+model: "opus[1m]"
 ---
 
 # Dependency Audit
