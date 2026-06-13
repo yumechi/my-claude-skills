@@ -1,6 +1,9 @@
 ---
 name: check-public-repository
 description: リポジトリを公開する前に、機密情報や不適切なデータが含まれていないかチェックします
+context: fork
+agent: general-purpose
+model: "opus[1m]"
 ---
 
 # リポジトリ公開前チェック

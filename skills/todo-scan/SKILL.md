@@ -1,6 +1,9 @@
 ---
 name: todo-scan
 description: コードベース内の TODO/FIXME コメントをスキャンして一覧表示します
+context: fork
+agent: general-purpose
+model: haiku
 ---
 
 # TODO Scan
